@@ -1,0 +1,58 @@
+# Configuração do experimento. Todos os parâmetros aqui são mantidos idênticos
+# em todas as execuções; apenas o arquivo do modelo (nível de quantização) varia.
+
+[experiment]
+prompts_file = "prompts/prompts.jsonl"
+results_dir = "results"
+warmup_reps = 1          # baterias de aquecimento (descartadas na análise)
+reps = 3                 # baterias medidas
+baseline = "F16"         # nível usado como linha de base nas comparações relativas
+
+[models]
+dir = "C:/LLMs/models"
+name = "Qwen3.5-2B"
+# Ordem de execução (do maior para o menor bpw). Arquivo: <dir>/<name>-<quant>.gguf
+quants = ["F16", "Q8_0", "Q6_K", "Q5_K_M", "Q4_K_M", "Q4_0", "Q3_K_M", "Q2_K"]
+
+[server]
+binary = "llama-server"
+host = "127.0.0.1"
+port = 8089
+load_timeout_s = 300
+request_timeout_s = 600
+args = [
+  "-ngl", "all",            # todas as camadas na GPU
+  "--fit", "off",           # impede ajuste automático de parâmetros por modelo
+  "-c", "4096",             # janela de contexto
+  "-fa", "on",              # flash attention
+  "-np", "1",               # um slot: prompts executados em sequência
+  "-t", "8",                # threads de CPU
+  "-b", "2048",
+  "-ub", "512",
+  "--seed", "42",
+  "--no-cache-prompt",      # cada prompt é uma execução independente
+  "--reasoning", "off",     # thinking desligado
+  "--no-mmproj",            # apenas texto
+]
+
+[generation]
+temperature = 0.0           # greedy: saída determinística
+top_k = 1
+seed = 42
+max_tokens = 1024
+
+[monitor]
+interval_s = 0.25
+gpu_index = 0
+
+[cooldown]
+max_temp_c = 50             # espera a GPU esfriar antes de cada nível
+max_wait_s = 120
+
+[llama_bench]
+enabled = true
+binary = "llama-bench"
+args = ["-ngl", "99", "-fa", "on", "-p", "512", "-n", "128", "-r", "5", "-t", "8"]
+
+[grading]
+code_timeout_s = 10

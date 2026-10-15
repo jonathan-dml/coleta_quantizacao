@@ -1,0 +1,2 @@
+quant,prefill_tps_mean,prefill_tps_std,prefill_tps_min,prefill_tps_max,prefill_tps_median,prefill_tps_count,decode_tps_mean,decode_tps_std,decode_tps_min,decode_tps_max,decode_tps_median,decode_tps_count,battery_s_mean,battery_s_std,battery_s_min,battery_s_max,battery_s_median,battery_s_count
+Q4_K_M,3031.2136613663984,,3031.2136613663984,3031.2136613663984,3031.2136613663984,1,213.75833368638763,,213.75833368638763,213.75833368638763,213.75833368638763,1,3.890447,,3.890447,3.890447,3.890447,1

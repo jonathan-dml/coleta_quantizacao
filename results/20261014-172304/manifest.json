@@ -1,0 +1,121 @@
+{
+  "run_id": "20261014-172304",
+  "started_at": "2026-10-14T17:23:04",
+  "prompts_file": "prompts/prompts.jsonl",
+  "prompts_sha256": "c714c9edda3ef4402833b0d4de51c233e33ae135547b721477b8906186037440",
+  "n_prompts": 8,
+  "selection": {
+    "quants": [
+      "F16",
+      "Q4_K_M",
+      "Q2_K"
+    ],
+    "limit": 2,
+    "reps": 2,
+    "warmup": 1,
+    "llama_bench": false
+  },
+  "config": {
+    "experiment": {
+      "prompts_file": "prompts/prompts.jsonl",
+      "results_dir": "results",
+      "warmup_reps": 1,
+      "reps": 3,
+      "baseline": "F16"
+    },
+    "models": {
+      "dir": "C:/LLMs/models",
+      "name": "Qwen3.5-2B",
+      "quants": [
+        "F16",
+        "Q8_0",
+        "Q6_K",
+        "Q5_K_M",
+        "Q4_K_M",
+        "Q4_0",
+        "Q3_K_M",
+        "Q2_K"
+      ]
+    },
+    "server": {
+      "binary": "llama-server",
+      "host": "127.0.0.1",
+      "port": 8089,
+      "load_timeout_s": 300,
+      "request_timeout_s": 600,
+      "args": [
+        "-ngl",
+        "all",
+        "--fit",
+        "off",
+        "-c",
+        "4096",
+        "-fa",
+        "on",
+        "-np",
+        "1",
+        "-t",
+        "8",
+        "-b",
+        "2048",
+        "-ub",
+        "512",
+        "--seed",
+        "42",
+        "--no-cache-prompt",
+        "--reasoning",
+        "off",
+        "--no-mmproj"
+      ]
+    },
+    "generation": {
+      "temperature": 0.0,
+      "top_k": 1,
+      "seed": 42,
+      "max_tokens": 1024
+    },
+    "monitor": {
+      "interval_s": 0.25,
+      "gpu_index": 0
+    },
+    "cooldown": {
+      "max_temp_c": 50,
+      "max_wait_s": 120
+    },
+    "llama_bench": {
+      "enabled": true,
+      "binary": "llama-bench",
+      "args": [
+        "-ngl",
+        "99",
+        "-fa",
+        "on",
+        "-p",
+        "512",
+        "-n",
+        "128",
+        "-r",
+        "5",
+        "-t",
+        "8"
+      ]
+    },
+    "grading": {
+      "code_timeout_s": 10
+    }
+  },
+  "environment": {
+    "llama_cpp": "version: 0.5.0-dev (build 11149, commit d2e54583c) | built with Clang 20.1.8 for Windows x86_64",
+    "gpu": {
+      "name": "NVIDIA GeForce RTX 3060 Ti",
+      "driver": "616.56",
+      "vram_total_mb": 8192.0
+    },
+    "cpu": "AMD Ryzen 7 5700X 8-Core Processor",
+    "cpu_cores": 8,
+    "cpu_threads": 16,
+    "ram_total_gb": 31.9,
+    "os": "Windows-11-10.0.26200-SP0",
+    "python": "3.14.7"
+  }
+}

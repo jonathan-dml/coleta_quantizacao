@@ -1,0 +1,15 @@
+\begin{table}[htb]
+\centering
+\caption{Resultados por nível de quantização}
+\label{tab:resultados}
+\begin{tabular}{lrrrrrr}
+\hline
+\textbf{Nível} & \textbf{bpw} & \textbf{Tam. (MB)} & \textbf{VRAM (MB)} & \textbf{\textit{Prefill} (t/s)} & \textbf{\textit{Decode} (t/s)} & \textbf{Qualidade (\%)} \\
+\hline
+F16 (base) & 16,05 & 3.717 & 3.846 & 3.418 $\pm$ 87 & 119,3 $\pm$ 0,2 & 75,0 \\
+Q4\_K\_M & 5,40 & 1.251 & 1.463 & 3.521 $\pm$ 12 & 209,3 $\pm$ 1,5 & 75,0 \\
+Q2\_K & 4,08 & 945 & 1.165 & 3.120 $\pm$ 41 & 202,4 $\pm$ 0,4 & 0,0 \\
+\hline
+\end{tabular}
+\\[2pt]{\footnotesize \textbf{Fonte: Dados da Pesquisa.}}
+\end{table}
