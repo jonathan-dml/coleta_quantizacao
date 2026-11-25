@@ -1,0 +1,22 @@
+\begin{table}[htb]
+\centering
+\caption{Qualidade das respostas do Qwen3.5-4B por nível de quantização}
+\label{tab:qualidade-Qwen3.5-4B}
+\small
+\begin{tabular}{lrrrrrrrrr}
+\hline
+\textbf{Nível} & \textbf{MMLU} & \textbf{GSM8K} & \textbf{HumanEval} & \textbf{HEFix} & \textbf{Geral} & \textbf{$\Delta$ (p.p.)} & \textbf{\textit{p}} & \textbf{Trunc.} & \textbf{Idênt.} \\
+\hline
+F16 & 65 & 95 & 80 & 45 & 71,25 & -- & -- & 0,00 & 100,00 \\
+Q8\_0 & 65 & 95 & 70 & 45 & 68,75 & $-$2,50 & 0,500 & 1,25 & 66,25 \\
+Q6\_K & 65 & 95 & 85 & 40 & 71,25 & 0,00 & 1,000 & 0,00 & 56,25 \\
+Q5\_K\_M & 65 & 95 & 90 & 35 & 71,25 & 0,00 & 1,000 & 0,00 & 43,75 \\
+Q4\_K\_M & 75 & 90 & 90 & 40 & 73,75 & +2,50 & 0,727 & 0,00 & 35,00 \\
+Q4\_0 & 60 & 90 & 90 & 40 & 70,00 & $-$1,25 & 1,000 & 1,25 & 31,25 \\
+Q3\_K\_M & 70 & 90 & 85 & 35 & 70,00 & $-$1,25 & 1,000 & 2,50 & 28,75 \\
+Q2\_K & 20 & 10 & 0 & 0 & 7,50 & $-$63,75 & $<$0,001 & 40,00 & 3,75 \\
+\hline
+\end{tabular}
+\\[2pt]{\footnotesize \textbf{Fonte: Dados da pesquisa.}}
+\\[2pt]{\footnotesize MMLU, GSM8K, HumanEval e HEFix (HumanEvalFix): percentual de acertos em cada categoria. Geral: percentual de acertos em todos os prompts. $\Delta$ (p.p.): diferença do acerto geral em relação ao F16. \textit{p}: teste exato de McNemar em relação ao F16. Trunc.: percentual de respostas interrompidas pelo limite de \textit{tokens}. Idênt.: percentual de respostas idênticas às do F16.}
+\end{table}

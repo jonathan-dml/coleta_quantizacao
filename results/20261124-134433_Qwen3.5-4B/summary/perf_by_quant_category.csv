@@ -1,0 +1,9 @@
+quant,category,prefill_tps_mean,prefill_tps_std,prefill_tps_min,prefill_tps_max,prefill_tps_median,prefill_tps_count,decode_tps_mean,decode_tps_std,decode_tps_min,decode_tps_max,decode_tps_median,decode_tps_count,latency_ms_mean,latency_ms_std,latency_ms_min,latency_ms_max,latency_ms_median,latency_ms_count,prompt_tokens_mean,prompt_tokens_std,prompt_tokens_min,prompt_tokens_max,prompt_tokens_median,prompt_tokens_count,completion_tokens_mean,completion_tokens_std,completion_tokens_min,completion_tokens_max,completion_tokens_median,completion_tokens_count
+F16,conhecimentos_gerais,52.348,,52.348,52.348,52.348,1,5.789,,5.789,5.789,5.789,1,1832.93,,1832.93,1832.93,1832.93,1,84.0,,84,84,84.0,1,2.0,,2,2,2.0,1
+F16,matematica,53.909,,53.909,53.909,53.909,1,5.485,,5.485,5.485,5.485,1,63378.975,,63378.975,63378.975,63378.975,1,83.0,,83,83,83.0,1,340.0,,340,340,340.0,1
+F16,programacao,161.916,,161.916,161.916,161.916,1,5.821,,5.821,5.821,5.821,1,20043.5,,20043.5,20043.5,20043.5,1,127.0,,127,127,127.0,1,113.0,,113,113,113.0,1
+F16,correcao_bugs,165.766,,165.766,165.766,165.766,1,5.423,,5.423,5.423,5.423,1,24673.273,,24673.273,24673.273,24673.273,1,170.0,,170,170,170.0,1,129.0,,129,129,129.0,1
+Q4_K_M,conhecimentos_gerais,1210.322,,1210.322,1210.322,1210.322,1,73.806,,73.806,73.806,73.806,1,142.325,,142.325,142.325,142.325,1,84.0,,84,84,84.0,1,2.0,,2,2,2.0,1
+Q4_K_M,matematica,1138.593,,1138.593,1138.593,1138.593,1,90.74,,90.74,90.74,90.74,1,3259.645,,3259.645,3259.645,3259.645,1,83.0,,83,83,83.0,1,287.0,,287,287,287.0,1
+Q4_K_M,programacao,1314.577,,1314.577,1314.577,1314.577,1,85.306,,85.306,85.306,85.306,1,2026.204,,2026.204,2026.204,2026.204,1,127.0,,127,127,127.0,1,164.0,,164,164,164.0,1
+Q4_K_M,correcao_bugs,1466.238,,1466.238,1466.238,1466.238,1,85.542,,85.542,85.542,85.542,1,1656.698,,1656.698,1656.698,1656.698,1,170.0,,170,170,170.0,1,129.0,,129,129,129.0,1

@@ -6,9 +6,13 @@ as métricas de prefill/decode reportadas pelo llama.cpp, além de VRAM, RAM,
 temperatura e clock da GPU amostrados durante toda a execução.
 
 Uso:
-    python benchmark.py                               # matriz completa do config.toml
+    python benchmark.py                               # matriz completa do modelo padrão
+    python benchmark.py --model Qwen3.5-4B            # outro modelo (prefixo dos arquivos GGUF)
     python benchmark.py --models Q4_K_M --limit 2 --reps 1   # teste rápido
-    python benchmark.py --resume 20261014-153000      # retoma um run interrompido
+    python benchmark.py --resume 20261124-210000_Qwen3.5-4B  # retoma um run interrompido
+
+Arquivos maiores que a VRAM usam o número de camadas na GPU definido em
+[models.gpu_layers] do config.toml (offload parcial para a CPU).
 """
 
 import argparse
@@ -81,10 +85,38 @@ def wait_cooldown(gpu, cfg):
     return gpu.snapshot()["gpu_temp_c"]
 
 
+def gpu_layers(cfg, model_path):
+    """Camadas na GPU definidas no config para este arquivo, ou None (todas)."""
+    return cfg["models"].get("gpu_layers", {}).get(model_path.stem)
+
+
+def with_gpu_layers(args, n):
+    """Copia a lista de argumentos substituindo o valor de -ngl por n."""
+    args = list(args)
+    args[args.index("-ngl") + 1] = str(n)
+    return args
+
+
+def check_fits(gpu, model_path, margin_mb=600):
+    """Aborta antes de carregar um arquivo que não cabe inteiro na VRAM livre."""
+    size_mb = model_path.stat().st_size / 1024**2
+    free_mb = gpu.info()["vram_total_mb"] - gpu.snapshot()["vram_used_mb"]
+    if size_mb + margin_mb > free_mb:
+        sys.exit(
+            f"{model_path.name} ({size_mb:.0f} MB) não cabe na VRAM livre ({free_mb:.0f} MB).\n"
+            f"Feche outros aplicativos ou defina camadas na GPU em [models.gpu_layers] do config.toml,\n"
+            f"usando o valor sugerido por:\n"
+            f"  llama-fit-params -m {model_path} -c 4096 -fa on -np 1 -b 2048 -ub 512"
+        )
+
+
 def run_llama_bench(cfg, model_path, quant, run_dir):
     lb = cfg["llama_bench"]
-    print(f"  llama-bench {' '.join(lb['args'])}")
-    proc = subprocess.run([lb["binary"], "-m", str(model_path), *lb["args"], "-o", "jsonl"],
+    args = lb["args"]
+    if (n := gpu_layers(cfg, model_path)) is not None:
+        args = with_gpu_layers(args, n)
+    print(f"  llama-bench {' '.join(args)}")
+    proc = subprocess.run([lb["binary"], "-m", str(model_path), *args, "-o", "jsonl"],
                           capture_output=True, text=True)
     if proc.returncode != 0:
         print(f"  llama-bench falhou ({proc.returncode}): {proc.stderr.strip()[-300:]}")
@@ -104,12 +136,17 @@ def run_quant(cfg, sel, quant, prompts, run_dir, gpu, done):
         print(f"[{quant}] já concluído, pulando")
         return
 
-    print(f"\n[{quant}] {model_path.name} — {len(pending)} execuções pendentes")
+    srv_cfg, gen = cfg["server"], cfg["generation"]
+    n_gpu = gpu_layers(cfg, model_path)
+    server_args = srv_cfg["args"] if n_gpu is None else with_gpu_layers(srv_cfg["args"], n_gpu)
+    offload = f" (offload: {n_gpu} camadas na GPU)" if n_gpu is not None else ""
+    print(f"\n[{quant}] {model_path.name}{offload} — {len(pending)} execuções pendentes")
     temp_start = wait_cooldown(gpu, cfg)
     vram_baseline = gpu.snapshot()["vram_used_mb"]
+    if n_gpu is None:
+        check_fits(gpu, model_path)
 
-    srv_cfg, gen = cfg["server"], cfg["generation"]
-    server = LlamaServer(srv_cfg["binary"], model_path, srv_cfg["host"], srv_cfg["port"], srv_cfg["args"],
+    server = LlamaServer(srv_cfg["binary"], model_path, srv_cfg["host"], srv_cfg["port"], server_args,
                          run_dir / f"server_{quant}.log", srv_cfg["load_timeout_s"])
     monitor = ResourceMonitor(gpu, cfg["monitor"]["interval_s"])
     server.start()
@@ -119,7 +156,13 @@ def run_quant(cfg, sel, quant, prompts, run_dir, gpu, done):
         monitor.set_phase("idle")
         time.sleep(2)  # algumas amostras com o modelo carregado e ocioso
         meta = server.model_meta()
-        print(f"  carregado em {server.load_time_s:.1f}s; VRAM {gpu.snapshot()['vram_used_mb']:.0f} MB")
+        vram_used = gpu.snapshot()["vram_used_mb"]
+        vram_free_loaded = gpu.info()["vram_total_mb"] - vram_used
+        print(f"  carregado em {server.load_time_s:.1f}s; VRAM {vram_used:.0f} MB ({vram_free_loaded:.0f} MB livres)")
+        if vram_free_loaded < 300:
+            # No Windows o driver pode transbordar para a memória compartilhada sem
+            # erro, o que distorce os tempos medidos.
+            print("  AVISO: VRAM quase esgotada; feche outros aplicativos ou reduza [models.gpu_layers]")
 
         monitor.set_phase("battery")
         for i, (rep, prompt) in enumerate(pending, 1):
@@ -168,13 +211,17 @@ def run_quant(cfg, sel, quant, prompts, run_dir, gpu, done):
     n_params = meta.get("n_params")
     summary = {
         "quant": quant,
+        "model_name": cfg["models"]["name"],
         "model_file": model_path.name,
+        "gpu_layers": n_gpu if n_gpu is not None else "all",
+        "offload": n_gpu is not None,
         "file_size_mb": round(size / 1024**2, 1),
         "n_params": n_params,
         "bpw": round(size * 8 / n_params, 3) if n_params else None,
         "load_time_s": server.load_time_s,
         "gpu_temp_start_c": temp_start,
         "vram_baseline_mb": vram_baseline,
+        "vram_free_loaded_mb": round(vram_free_loaded, 1),
         **monitor.summary(),
         "server_meta": meta,
     }
@@ -189,6 +236,7 @@ def run_quant(cfg, sel, quant, prompts, run_dir, gpu, done):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--config", default=str(ROOT / "config.toml"))
+    ap.add_argument("--model", help="nome do modelo, prefixo dos arquivos GGUF (padrão: [models].name)")
     ap.add_argument("--models", help="lista de quantizações separadas por vírgula (padrão: todas do config)")
     ap.add_argument("--limit", type=int, help="máximo de prompts por categoria")
     ap.add_argument("--reps", type=int, help="repetições medidas (padrão: config)")
@@ -205,6 +253,8 @@ def main():
     else:
         with open(args.config, "rb") as f:
             cfg = tomllib.load(f)
+        if args.model:
+            cfg["models"]["name"] = args.model
         exp = cfg["experiment"]
         sel = {
             "quants": args.models.split(",") if args.models else cfg["models"]["quants"],
@@ -213,7 +263,13 @@ def main():
             "warmup": args.warmup if args.warmup is not None else exp["warmup_reps"],
             "llama_bench": cfg["llama_bench"]["enabled"] and not args.no_llama_bench,
         }
-        run_id = datetime.now().strftime("%Y%m%d-%H%M%S")
+        models_dir = Path(cfg["models"]["dir"])
+        missing = [q for q in sel["quants"]
+                   if not (models_dir / f"{cfg['models']['name']}-{q}.gguf").exists()]
+        if missing:
+            sys.exit(f"arquivos não encontrados em {models_dir}: "
+                     + ", ".join(f"{cfg['models']['name']}-{q}.gguf" for q in missing))
+        run_id = f"{datetime.now():%Y%m%d-%H%M%S}_{cfg['models']['name']}"
         run_dir = ROOT / cfg["experiment"]["results_dir"] / run_id
         run_dir.mkdir(parents=True)
         manifest = None
@@ -247,7 +303,7 @@ def main():
     elif manifest["prompts_sha256"] != prompts_sha:
         sys.exit("prompts.jsonl mudou desde o início deste run; não é possível retomar")
 
-    print(f"Run {run_dir.name}: {len(sel['quants'])} níveis × {len(prompts)} prompts × "
+    print(f"Run {run_dir.name}: {cfg['models']['name']}, {len(sel['quants'])} níveis × {len(prompts)} prompts × "
           f"({sel['warmup']} aquec. + {sel['reps']} reps)")
     print(f"llama.cpp: {manifest['environment']['llama_cpp']}")
 

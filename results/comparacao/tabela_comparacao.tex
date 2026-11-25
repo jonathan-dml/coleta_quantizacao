@@ -1,0 +1,23 @@
+\begin{table}[htb]
+\centering
+\caption{Comparação entre os modelos por nível de quantização, em valores absolutos e relativos à linha de base de cada modelo}
+\label{tab:comparacao}
+\small
+\begin{tabular}{lrrrrrrrrrr}
+\hline
+ & \multicolumn{5}{c}{\textbf{Qwen3.5-2B}} & \multicolumn{5}{c}{\textbf{Qwen3.5-4B}} \\
+\textbf{Nível} & \textbf{VRAM} & \textbf{\textit{Decode}} & \textbf{$\Delta$\%} & \textbf{Geral} & \textbf{$\Delta$ p.p.} & \textbf{VRAM} & \textbf{\textit{Decode}} & \textbf{$\Delta$\%} & \textbf{Geral} & \textbf{$\Delta$ p.p.} \\
+\hline
+F16 & 3.870 & 120,6 & -- & 56,25 & -- & 5.752$^\dagger$ & 7,3 & -- & 71,25 & -- \\
+Q8\_0 & 2.174 & 179,5 & +48,9 & 53,75 & $-$2,50 & 4.657 & 92,1 & +1.158,8 & 68,75 & $-$2,50 \\
+Q6\_K & 1.738 & 178,5 & +48,0 & 56,25 & 0,00 & 3.685 & 93,0 & +1.171,4 & 71,25 & 0,00 \\
+Q5\_K\_M & 1.601 & 202,2 & +67,6 & 61,25 & +5,00 & 3.315 & 108,2 & +1.378,8 & 71,25 & 0,00 \\
+Q4\_K\_M & 1.467 & 210,3 & +74,4 & 47,50 & $-$8,75 & 2.965 & 115,2 & +1.474,6 & 73,75 & +2,50 \\
+Q4\_0 & 1.403 & 231,1 & +91,7 & 47,50 & $-$8,75 & 2.807 & 131,1 & +1.691,1 & 70,00 & $-$1,25 \\
+Q3\_K\_M & 1.305 & 184,7 & +53,1 & 36,25 & $-$20,00* & 2.539 & 95,2 & +1.201,2 & 70,00 & $-$1,25 \\
+Q2\_K & 1.178 & 205,1 & +70,1 & 1,25 & $-$55,00* & 2.209 & 110,9 & +1.415,9 & 7,50 & $-$63,75* \\
+\hline
+\end{tabular}
+\\[2pt]{\footnotesize \textbf{Fonte: Dados da pesquisa.}}
+\\[2pt]{\footnotesize VRAM em MB; \textit{Decode} em \textit{tokens} por segundo; $\Delta$\%: variação do \textit{decode} em relação ao F16 do mesmo modelo; Geral: percentual de acertos; $\Delta$ p.p.: diferença do acerto geral em relação ao F16 do mesmo modelo; * diferença significativa (McNemar, $p < 0{,}05$). $^\dagger$ \textit{Offload} parcial (Qwen3.5-4B F16: 21 camadas na GPU).}
+\end{table}

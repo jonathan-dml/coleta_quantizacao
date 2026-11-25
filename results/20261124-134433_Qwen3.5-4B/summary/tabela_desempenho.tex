@@ -1,0 +1,16 @@
+\begin{table}[htb]
+\centering
+\caption{Métricas de desempenho do Qwen3.5-4B por nível de quantização (média $\pm$ desvio padrão entre as baterias medidas)}
+\label{tab:desempenho-Qwen3.5-4B}
+\small
+\begin{tabular}{lrrrrrrrr}
+\hline
+\textbf{Nível} & \textbf{VRAM (MB)} & \textbf{$\Delta$VRAM (\%)} & \textbf{Carga (s)} & \textbf{\textit{Prefill} (t/s)} & \textbf{\textit{Decode} (t/s)} & \textbf{$\Delta$\textit{Decode} (\%)} & \textbf{tg128 (t/s)} & \textbf{Bateria (s)} \\
+\hline
+F16 & 4.181$^\dagger$ & -- & 15,3 & 94 $\pm$ -- & 5,6 $\pm$ -- & -- & 5,4 & 109,9 \\
+Q4\_K\_M & 2.906 & $-$30,5 & 4,8 & 1.308 $\pm$ -- & 88,6 $\pm$ -- & +1.489,5 & 89,4 & 7,1 \\
+\hline
+\end{tabular}
+\\[2pt]{\footnotesize \textbf{Fonte: Dados da pesquisa.}}
+\\[2pt]{\footnotesize VRAM: memória atribuída ao modelo carregado; tg128: geração de 128 \textit{tokens} no llama-bench; Bateria: tempo total de uma bateria de prompts. $^\dagger$ \textit{Offload} parcial: F16 com 21 camadas na GPU e as demais na CPU.}
+\end{table}

@@ -1,0 +1,16 @@
+{"quant": "F16", "rep": 0, "is_warmup": true, "prompt_id": "conhecimentos_gerais_00", "category": "conhecimentos_gerais", "finish_reason": "stop", "extracted": "D", "correct": false, "error": ""}
+{"quant": "F16", "rep": 0, "is_warmup": true, "prompt_id": "matematica_00", "category": "matematica", "finish_reason": "stop", "extracted": 8000.0, "correct": true, "error": ""}
+{"quant": "F16", "rep": 0, "is_warmup": true, "prompt_id": "programacao_00", "category": "programacao", "finish_reason": "stop", "extracted": null, "correct": true, "error": ""}
+{"quant": "F16", "rep": 0, "is_warmup": true, "prompt_id": "correcao_bugs_00", "category": "correcao_bugs", "finish_reason": "stop", "extracted": null, "correct": true, "error": ""}
+{"quant": "F16", "rep": 1, "is_warmup": false, "prompt_id": "conhecimentos_gerais_00", "category": "conhecimentos_gerais", "finish_reason": "stop", "extracted": "D", "correct": false, "error": ""}
+{"quant": "F16", "rep": 1, "is_warmup": false, "prompt_id": "matematica_00", "category": "matematica", "finish_reason": "stop", "extracted": 8000.0, "correct": true, "error": ""}
+{"quant": "F16", "rep": 1, "is_warmup": false, "prompt_id": "programacao_00", "category": "programacao", "finish_reason": "stop", "extracted": null, "correct": true, "error": ""}
+{"quant": "F16", "rep": 1, "is_warmup": false, "prompt_id": "correcao_bugs_00", "category": "correcao_bugs", "finish_reason": "stop", "extracted": null, "correct": true, "error": ""}
+{"quant": "Q4_K_M", "rep": 0, "is_warmup": true, "prompt_id": "conhecimentos_gerais_00", "category": "conhecimentos_gerais", "finish_reason": "stop", "extracted": "D", "correct": false, "error": ""}
+{"quant": "Q4_K_M", "rep": 0, "is_warmup": true, "prompt_id": "matematica_00", "category": "matematica", "finish_reason": "stop", "extracted": 8000.0, "correct": true, "error": ""}
+{"quant": "Q4_K_M", "rep": 0, "is_warmup": true, "prompt_id": "programacao_00", "category": "programacao", "finish_reason": "stop", "extracted": null, "correct": true, "error": ""}
+{"quant": "Q4_K_M", "rep": 0, "is_warmup": true, "prompt_id": "correcao_bugs_00", "category": "correcao_bugs", "finish_reason": "stop", "extracted": null, "correct": true, "error": ""}
+{"quant": "Q4_K_M", "rep": 1, "is_warmup": false, "prompt_id": "conhecimentos_gerais_00", "category": "conhecimentos_gerais", "finish_reason": "stop", "extracted": "D", "correct": false, "error": ""}
+{"quant": "Q4_K_M", "rep": 1, "is_warmup": false, "prompt_id": "matematica_00", "category": "matematica", "finish_reason": "stop", "extracted": 8000.0, "correct": true, "error": ""}
+{"quant": "Q4_K_M", "rep": 1, "is_warmup": false, "prompt_id": "programacao_00", "category": "programacao", "finish_reason": "stop", "extracted": null, "correct": true, "error": ""}
+{"quant": "Q4_K_M", "rep": 1, "is_warmup": false, "prompt_id": "correcao_bugs_00", "category": "correcao_bugs", "finish_reason": "stop", "extracted": null, "correct": true, "error": ""}

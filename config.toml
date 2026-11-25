@@ -10,9 +10,16 @@ baseline = "F16"         # nível usado como linha de base nas comparações rel
 
 [models]
 dir = "C:/LLMs/models"
-name = "Qwen3.5-2B"
+name = "Qwen3.5-2B"          # modelo padrão; outro modelo: python benchmark.py --model Qwen3.5-4B
 # Ordem de execução (do maior para o menor bpw). Arquivo: <dir>/<name>-<quant>.gguf
 quants = ["F16", "Q8_0", "Q6_K", "Q5_K_M", "Q4_K_M", "Q4_0", "Q3_K_M", "Q2_K"]
+
+# Arquivos que não cabem inteiros na VRAM: número fixo de camadas na GPU (o restante
+# fica na CPU). Vale para o llama-server e para o llama-bench. Arquivos não listados
+# usam todas as camadas na GPU. Valor obtido com:
+#   llama-fit-params -m <arquivo.gguf> -c 4096 -fa on -np 1 -b 2048 -ub 512
+[models.gpu_layers]
+"Qwen3.5-4B-F16" = 21        # 21 de 33 camadas (margem de 1 GiB)
 
 [server]
 binary = "llama-server"

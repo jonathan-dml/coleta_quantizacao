@@ -1,0 +1,16 @@
+\begin{table}[htb]
+\centering
+\caption{Qualidade das respostas do Qwen3.5-4B por nível de quantização}
+\label{tab:qualidade-Qwen3.5-4B}
+\small
+\begin{tabular}{lrrrrrrrrr}
+\hline
+\textbf{Nível} & \textbf{MMLU} & \textbf{GSM8K} & \textbf{HumanEval} & \textbf{HEFix} & \textbf{Geral} & \textbf{$\Delta$ (p.p.)} & \textbf{\textit{p}} & \textbf{Trunc.} & \textbf{Idênt.} \\
+\hline
+F16 & 0 & 100 & 100 & 100 & 75,00 & -- & -- & 0,00 & 100,00 \\
+Q4\_K\_M & 0 & 100 & 100 & 100 & 75,00 & 0,00 & 1,000 & 0,00 & 50,00 \\
+\hline
+\end{tabular}
+\\[2pt]{\footnotesize \textbf{Fonte: Dados da pesquisa.}}
+\\[2pt]{\footnotesize MMLU, GSM8K, HumanEval e HEFix (HumanEvalFix): percentual de acertos em cada categoria. Geral: percentual de acertos em todos os prompts. $\Delta$ (p.p.): diferença do acerto geral em relação ao F16. \textit{p}: teste exato de McNemar em relação ao F16. Trunc.: percentual de respostas interrompidas pelo limite de \textit{tokens}. Idênt.: percentual de respostas idênticas às do F16.}
+\end{table}
